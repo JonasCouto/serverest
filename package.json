@@ -8,8 +8,10 @@
   "scripts": {
     "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "test:api": "cypress run --spec 'cypress/api/**/*.feature'",
-    "test:e2e": "cypress run --spec 'cypress/e2e/**/*.feature'",
+    "cy:open:api": "cypress open --e2e --config specPattern=cypress/api/**/*.feature",
+    "cy:open:e2e": "cypress open --e2e --config specPattern=cypress/e2e/**/*.feature",
+    "test:api": "cypress run --spec cypress/api/**/*.feature",
+    "test:e2e": "cypress run --spec cypress/e2e/**/*.feature",
     "report:allure": "allure generate allure-results --clean -o allure-report && allure open allure-report",
     "lint": "eslint cypress/",
     "format": "prettier --write cypress/"
@@ -26,7 +28,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@badeball/cypress-cucumber-preprocessor": "^26.0.0",
+    "@badeball/cypress-cucumber-preprocessor": "^21.0.3",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
     "@faker-js/faker": "^10.5.0",
     "@shelex/cypress-allure-plugin": "^2.41.2",

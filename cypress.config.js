@@ -6,10 +6,14 @@ const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 
 module.exports = defineConfig({
   e2e: {
-    baseUrl: 'https://serverest.dev',
+    baseUrl: 'https://front.serverest.dev',
 
     specPattern: ['cypress/api/**/*.feature', 'cypress/e2e/**/*.feature'],
     supportFile: 'cypress/support/e2e.js',
+
+    env: {
+      apiUrl: 'https://serverest.dev',
+    },
 
     video: true,
     screenshotsFolder: 'cypress/reports/screenshots',
@@ -51,3 +55,5 @@ module.exports = defineConfig({
     },
   },
 });
+
+

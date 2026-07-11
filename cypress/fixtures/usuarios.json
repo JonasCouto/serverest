@@ -1,0 +1,18 @@
+{
+  "admin": {
+    "nome": "Admin Teste",
+    "email": "admin.fixture@qa.com",
+    "password": "teste@1234",
+    "administrador": "true"
+  },
+  "emailInvalido": "email-invalido",
+  "senhaErrada": "senhaErrada123",
+  "emailValido": "usuario@valido.com",
+  "produto": {
+    "nome": "Produto Fixture Teste",
+    "preco": 150,
+    "descricao": "Produto para testes automatizados",
+    "quantidade": 10
+  }
+}
+
