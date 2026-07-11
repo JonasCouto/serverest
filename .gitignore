@@ -1,0 +1,25 @@
+# Documentation
+docs/
+
+# Dependencies
+node_modules/
+
+# Cypress artifacts
+cypress/reports/
+cypress/screenshots/
+cypress/videos/
+allure-results/
+allure-report/
+
+# Environment files (never commit secrets)
+.env
+.env.*
+cypress.env.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
