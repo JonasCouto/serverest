@@ -26,12 +26,12 @@ Funcionalidade: Gestão de Usuários — Frontend ServeRest
     Então devo ver a mensagem de erro de credenciais inválidas
 
   @smoke @cadastro @fluxo-feliz
-  Cenário: Cadastrar novo usuário com sucesso deve redirecionar para login
+  Cenário: Cadastrar novo usuário com sucesso deve redirecionar para a página inicial
     Dado que estou na página de cadastro de usuário
     E que tenho dados de um novo usuário gerado dinamicamente
     Quando preencho o formulário com os dados do novo usuário
     E clico no botão de cadastrar
-    Então devo ser redirecionado para a página de login
+    Então devo ser redirecionado para a página inicial
 
   @negativo @cadastro
   Cenário: Tentar cadastrar usuário com e-mail já existente deve exibir erro

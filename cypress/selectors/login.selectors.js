@@ -3,10 +3,11 @@ const LOGIN_SELECTORS = {
   passwordInput: '[data-testid="senha"]',
   submitButton: '[data-testid="entrar"]',
   registerLink: '[data-testid="cadastrar"]',
-  errorMessage: '[data-testid="error"]',
-  emailError: '[data-testid="error-email"]',
-  passwordError: '[data-testid="error-senha"]',
-  welcomeText: '[data-testid="home-login"]',
+  // ErrorAlert não possui data-testid — renderiza .alert.alert-secondary > span
+  errorAlert: '.alert.alert-secondary',
+  // Após login, o navbar (cliente e admin) exibe o botão logout
+  logoutButton: '[data-testid="logout"]',
 };
 
 module.exports = { LOGIN_SELECTORS };
+

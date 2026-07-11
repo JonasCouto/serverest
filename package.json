@@ -1,40 +1,29 @@
 {
   "name": "serverest",
   "version": "1.0.0",
-  "description": "Automação de testes para ServeRest — Cypress 14 + Cucumber BDD",
+  "description": "Automação de testes para ServeRest — Cypress 14",
   "engines": {
     "node": ">=22"
   },
   "scripts": {
     "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "cy:open:api": "cypress open --e2e --config specPattern=cypress/api/**/*.feature",
-    "cy:open:e2e": "cypress open --e2e --config specPattern=cypress/e2e/**/*.feature",
-    "test:api": "cypress run --spec cypress/api/**/*.feature",
-    "test:e2e": "cypress run --spec cypress/e2e/**/*.feature",
+    "cy:open:api": "cypress open --e2e --config specPattern=cypress/api/**/*.cy.js",
+    "cy:open:e2e": "cypress open --e2e --config specPattern=cypress/e2e/**/*.cy.js",
+    "test:api": "cypress run --spec cypress/api/**/*.cy.js",
+    "test:e2e": "cypress run --spec cypress/e2e/**/*.cy.js",
     "report:allure": "allure generate allure-results --clean -o allure-report && allure open allure-report",
     "lint": "eslint cypress/",
     "format": "prettier --write cypress/"
-  },
-  "cypress-cucumber-preprocessor": {
-    "nonGlobalStepDefinitions": false,
-    "stepDefinitions": [
-      "cypress/api/**/*.js",
-      "cypress/e2e/**/*.js",
-      "cypress/support/step_definitions/**/*.js"
-    ]
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@badeball/cypress-cucumber-preprocessor": "^21.0.3",
-    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
     "@faker-js/faker": "^10.5.0",
     "@shelex/cypress-allure-plugin": "^2.41.2",
     "cypress": "^14.5.4",
     "cypress-mochawesome-reporter": "^4.0.2",
-    "esbuild": "^0.28.1",
     "eslint": "^10.7.0",
     "eslint-plugin-cypress": "^6.4.2",
     "prettier": "^3.9.5"
