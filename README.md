@@ -47,11 +47,8 @@ Utilizando o framework Cypress e a linguagem JavaScript, são desenvolvidos cen�
 ## Instalação
 
 ```bash
-# 1. Clone o repositório
 git clone <url-do-repositorio>
 cd serverest
-
-# 2. Instale as dependências
 npm install
 ```
 
@@ -62,27 +59,17 @@ npm install
 ### Interface gráfica (modo interativo)
 
 ```bash
-# Abre o Cypress com todos os testes disponíveis
-npm run cy:open
-
-# Abre filtrado apenas para testes de API
-npm run cy:open:api
-
-# Abre filtrado apenas para testes E2E
-npm run cy:open:e2e
+npm run cy:open         # Todos os testes
+npm run cy:open:api     # Apenas API
+npm run cy:open:e2e     # Apenas E2E
 ```
 
 ### Headless (modo CI)
 
 ```bash
-# Roda todos os testes (API + E2E)
-npm run cy:run
-
-# Apenas testes de API
-npm run test:api
-
-# Apenas testes E2E
-npm run test:e2e
+npm run cy:run          # Todos os testes
+npm run test:api        # Apenas API
+npm run test:e2e        # Apenas E2E
 ```
 
 ---
@@ -103,7 +90,6 @@ open cypress/reports/html/index.html    # macOS
 Requer [Allure CLI](https://docs.qameta.io/allure/#_installing_a_commandline) instalado globalmente.
 
 ```bash
-# Gerar e abrir relatório Allure
 npm run report:allure
 ```
 
@@ -112,11 +98,8 @@ npm run report:allure
 ## Qualidade de Código
 
 ```bash
-# Verificar lint
-npm run lint
-
-# Formatar código
-npm run format
+npm run lint      # Verificar lint
+npm run format    # Formatar código
 ```
 
 ---
@@ -128,33 +111,31 @@ serverest/
 ├── cypress/
 │   ├── api/
 │   │   └── produtos/
-│   │       ├── produtos.cy.js       # Testes de API — Produtos
-│   │       └── produtos.feature     # Documentação BDD (referência)
+│   │       ├── produtos.cy.js
+│   │       └── produtos.feature
 │   ├── e2e/
 │   │   └── usuarios/
-│   │       ├── usuarios.cy.js       # Testes E2E — Usuários
-│   │       └── usuarios.feature     # Documentação BDD (referência)
+│   │       ├── usuarios.cy.js
+│   │       └── usuarios.feature
 │   ├── commands/
-│   │   ├── auth.commands.js         # loginViaApi, cadastrarUsuario, deletarUsuario
-│   │   ├── login.commands.js        # visitLogin, loginViaUI, fillLoginEmail, ...
-│   │   └── cadastro.commands.js     # visitCadastro, fillCadastroForm, submitCadastro, ...
+│   │   ├── auth.commands.js
+│   │   ├── login.commands.js
+│   │   └── cadastro.commands.js
 │   ├── selectors/
-│   │   ├── login.selectors.js       # Seletores da tela de login
-│   │   └── cadastro.selectors.js    # Seletores da tela de cadastro
+│   │   ├── login.selectors.js
+│   │   └── cadastro.selectors.js
 │   ├── services/
-│   │   ├── usuarios.service.js      # listar, buscarPorId, cadastrar, editar, deletar, login
-│   │   └── produtos.service.js      # listar, buscarPorId, cadastrar, editar, deletar
+│   │   ├── usuarios.service.js
+│   │   └── produtos.service.js
 │   ├── builders/
-│   │   ├── usuario.builder.js       # Builder com dados dinâmicos de usuário
-│   │   └── produto.builder.js       # Builder com dados dinâmicos de produto
-│   ├── contracts/
-│   │   └── serverest_contrato.json  # Contrato OpenAPI da ServeRest (referência)
-│   ├── fixtures/                    # Dados estáticos
+│   │   ├── usuario.builder.js
+│   │   └── produto.builder.js
+│   ├── fixtures/
 │   └── support/
-│       ├── e2e.js                   # Entry point do Cypress (imports globais)
-│       └── commands.js              # Registro de custom commands
-├── cypress.config.js                # Configuração do Cypress
-├── eslint.config.js                 # Regras de lint
+│       ├── e2e.js
+│       └── commands.js
+├── cypress.config.js
+├── eslint.config.js
 └── package.json
 ```
 
@@ -166,10 +147,13 @@ O projeto adota três padrões principais:
 
 ### Custom Commands (`cypress/commands/`)
 
-Encapsulam a interação com a UI, centralizando os seletores e evitando repetição nos testes.
+Encapsulam interações com a UI e operações reutilizáveis, centralizando seletores e eliminando repetição nos testes.
 
 ```js
-// Nos testes, sem acesso direto a seletores:
+// Autenticação — obtém token de admin via API
+cy.criarAdminEObterToken().then((token) => { ... });
+
+// Interação com UI — sem seletor direto nos testes
 cy.visitLogin();
 cy.loginViaUI(usuario.email, usuario.password);
 cy.getLogoutButton().should('be.visible');
@@ -183,6 +167,10 @@ Centraliza todas as chamadas à API REST, reutilizáveis tanto nos testes de API
 UsuariosService.cadastrar(usuario).then((res) => {
   expect(res.status).to.eq(201);
 });
+
+ProdutosService.deletar(id, token).then((res) => {
+  expect(res.status).to.eq(200);
+});
 ```
 
 ### Builder Pattern (`cypress/builders/`)
@@ -191,7 +179,7 @@ Gera payloads de teste com dados dinâmicos via `@faker-js/faker`, com interface
 
 ```js
 const admin = new UsuarioBuilder().comoAdministrador().build();
-const produto = new ProdutoBuilder().comPreco(99).build();
+const produto = new ProdutoBuilder().comPreco(99).comQuantidade(10).build();
 ```
 
 ---
@@ -200,23 +188,49 @@ const produto = new ProdutoBuilder().comPreco(99).build();
 
 ### API — Produtos (`cypress/api/produtos/produtos.cy.js`)
 
+**Leitura**
+
 | Cenário | Tags |
 |---|---|
-| Listar produtos retorna status 200 e estrutura válida | `@smoke` `@listagem` |
-| Cadastrar produto como administrador retorna 201 e confirma criação | `@smoke` `@cadastro-produto` |
+| Listar produtos retorna status 200, estrutura e quantidade correta | `@smoke` `@listagem` |
 | Buscar produto por ID retorna todos os campos com valores corretos | `@smoke` `@busca-produto` |
+
+**Escrita**
+
+| Cenário | Tags |
+|---|---|
+| Cadastrar produto como administrador retorna 201 e confirma criação via GET | `@smoke` `@cadastro-produto` |
 | Editar produto e confirmar atualização via GET | `@smoke` `@edicao` |
-| Cadastrar sem token retorna 401 | `@negativo` `@autenticacao` |
+| Deletar produto e confirmar remoção via GET (retorna 400) | `@smoke` `@exclusao` |
+
+**Segurança**
+
+| Cenário | Tags |
+|---|---|
+| Cadastrar produto sem token retorna 401 com mensagem de erro | `@negativo` `@autenticacao` |
 
 ### E2E — Usuários (`cypress/e2e/usuarios/usuarios.cy.js`)
 
+**Login**
+
 | Cenário | Tags |
 |---|---|
-| Login com credenciais válidas redireciona para home | `@smoke` `@login` |
-| Login com credenciais inválidas exibe alerta de erro | `@negativo` `@login` |
-| Cadastro de novo usuário redireciona para home | `@smoke` `@cadastro` |
-| Cadastro com e-mail duplicado exibe mensagem de erro | `@negativo` `@cadastro` |
-| Campos obrigatórios exibem 3 alertas de validação | `@negativo` `@validacao` |
+| Credenciais válidas redirecionam para home e exibem botão de logout | `@smoke` `@login` |
+| Credenciais inválidas exibem alerta e permanecem em `/login` | `@negativo` `@login` |
+
+**Cadastro**
+
+| Cenário | Tags |
+|---|---|
+| Novo usuário com sucesso redireciona para home | `@smoke` `@cadastro` |
+| E-mail duplicado exibe alerta e permanece em `/cadastrarusuarios` | `@negativo` `@cadastro` |
+| Formulário vazio exibe exatamente 3 alertas de validação | `@negativo` `@validacao` |
+
+**Logout**
+
+| Cenário | Tags |
+|---|---|
+| Logout após login redireciona para `/login` e remove botão de logout | `@smoke` `@logout` |
 
 ---
 
@@ -226,20 +240,15 @@ const produto = new ProdutoBuilder().comPreco(99).build();
 
 | Command | Descrição |
 |---|---|
-| `cy.loginViaApi(email, password)` | Autentica via API e salva token no localStorage |
-| `cy.cadastrarUsuario(usuario)` | Cadastra usuário via API |
-| `cy.deletarUsuario(id, token)` | Remove usuário via API |
+| `cy.criarAdminEObterToken()` | Cria usuário admin via API, autentica e retorna o token de autorização |
 
 ### Login (`login.commands.js`)
 
 | Command | Descrição |
 |---|---|
 | `cy.visitLogin()` | Navega para `/login` |
-| `cy.fillLoginEmail(email)` | Preenche campo de e-mail |
-| `cy.fillLoginPassword(password)` | Preenche campo de senha |
-| `cy.submitLogin()` | Clica no botão entrar |
 | `cy.loginViaUI(email, password)` | Preenche e submete o formulário de login |
-| `cy.getLoginErrorAlert()` | Retorna o elemento de alerta de erro |
+| `cy.getLoginErrorAlert()` | Retorna o elemento de alerta de erro de login |
 | `cy.getLogoutButton()` | Retorna o botão de logout |
 
 ### Cadastro (`cadastro.commands.js`)
@@ -247,12 +256,10 @@ const produto = new ProdutoBuilder().comPreco(99).build();
 | Command | Descrição |
 |---|---|
 | `cy.visitCadastro()` | Navega para `/cadastrarusuarios` |
-| `cy.fillCadastroNome(nome)` | Preenche campo nome |
-| `cy.fillCadastroEmail(email)` | Preenche campo e-mail |
-| `cy.fillCadastroPassword(password)` | Preenche campo senha |
-| `cy.fillCadastroForm({ nome, email, password })` | Preenche todo o formulário |
+| `cy.fillCadastroForm({ nome, email, password })` | Preenche todos os campos do formulário |
 | `cy.submitCadastro()` | Clica no botão cadastrar |
-| `cy.getCadastroAlert(texto)` | Retorna alerta que contém o texto |
+| `cy.getCadastroAlert(texto)` | Retorna alerta que contém o texto especificado |
+| `cy.getCadastroAlerts()` | Retorna todos os alertas de validação |
 
 ---
 
