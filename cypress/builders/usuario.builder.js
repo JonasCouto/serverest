@@ -10,18 +10,8 @@ class UsuarioBuilder {
     };
   }
 
-  comNome(nome) {
-    this.usuario.nome = nome;
-    return this;
-  }
-
   comEmail(email) {
     this.usuario.email = email;
-    return this;
-  }
-
-  comSenha(password) {
-    this.usuario.password = password;
     return this;
   }
 

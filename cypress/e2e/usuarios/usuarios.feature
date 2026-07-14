@@ -7,7 +7,7 @@ Funcionalidade: Gestão de Usuários — Frontend ServeRest
   Quero realizar login e cadastro no frontend
   Para acessar as funcionalidades da plataforma
 
-  @smoke @login @fluxo-feliz
+  @smoke @login
   Cenário: Login com credenciais válidas deve redirecionar para a página inicial
     Dado que estou na página de login
     E que tenho um usuário administrador cadastrado via API
@@ -25,7 +25,7 @@ Funcionalidade: Gestão de Usuários — Frontend ServeRest
     E clico no botão de entrar
     Então devo ver a mensagem de erro de credenciais inválidas
 
-  @smoke @cadastro @fluxo-feliz
+  @smoke @cadastro
   Cenário: Cadastrar novo usuário com sucesso deve redirecionar para a página inicial
     Dado que estou na página de cadastro de usuário
     E que tenho dados de um novo usuário gerado dinamicamente

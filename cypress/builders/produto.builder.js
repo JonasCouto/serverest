@@ -20,6 +20,11 @@ class ProdutoBuilder {
     return this;
   }
 
+  comDescricao(descricao) {
+    this.produto.descricao = descricao;
+    return this;
+  }
+
   comQuantidade(quantidade) {
     this.produto.quantidade = quantidade;
     return this;
