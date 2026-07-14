@@ -48,3 +48,14 @@ Funcionalidade: Gestão de Usuários — Frontend ServeRest
     Então devo ver a mensagem de campo nome obrigatório
     E devo ver a mensagem de campo e-mail obrigatório no cadastro
     E devo ver a mensagem de campo senha obrigatório no cadastro
+
+  @smoke @logout
+  Cenário: Logout após login deve redirecionar para a página de login
+    Dado que estou na página de login
+    E que tenho um usuário administrador cadastrado via API
+    Quando preencho o e-mail com o email do usuário cadastrado
+    E preencho a senha com a senha do usuário cadastrado
+    E clico no botão de entrar
+    E clico no botão de logout
+    Então devo ser redirecionado para a página de login
+    E o botão de logout não deve estar visível

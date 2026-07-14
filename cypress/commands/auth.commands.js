@@ -1,7 +1,4 @@
-/**
- * Realiza login via API e salva o token no localStorage,
- * evitando a necessidade de passar pela UI a cada teste.
- */
+
 Cypress.Commands.add('loginViaApi', (email, password) => {
   cy.request({
     method: 'POST',
@@ -15,9 +12,6 @@ Cypress.Commands.add('loginViaApi', (email, password) => {
   });
 });
 
-/**
- * Cadastra um usuário via API e retorna o ID gerado.
- */
 Cypress.Commands.add('cadastrarUsuario', (usuario) => {
   cy.request({
     method: 'POST',
@@ -27,9 +21,6 @@ Cypress.Commands.add('cadastrarUsuario', (usuario) => {
   });
 });
 
-/**
- * Remove um usuário via API pelo seu ID.
- */
 Cypress.Commands.add('deletarUsuario', (id, token) => {
   cy.request({
     method: 'DELETE',

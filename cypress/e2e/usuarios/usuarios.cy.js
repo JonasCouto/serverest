@@ -2,8 +2,7 @@ const { UsuariosService } = require('../../services/usuarios.service');
 const { UsuarioBuilder } = require('../../builders/usuario.builder');
 
 describe('Gestão de Usuários — Frontend ServeRest', { tags: ['@e2e', '@usuarios'] }, () => {
-  // ─── Login ──────────────────────────────────────────────────────────────────
-
+  
   context('Login', () => {
     it('com credenciais válidas deve redirecionar para a página inicial', { tags: ['@smoke', '@login'] }, () => {
       const usuario = new UsuarioBuilder().comoAdministrador().build();
@@ -28,8 +27,6 @@ describe('Gestão de Usuários — Frontend ServeRest', { tags: ['@e2e', '@usuar
       cy.getLoginErrorAlert().should('contain.text', 'Email e/ou senha inválidos');
     });
   });
-
-  // ─── Cadastro ───────────────────────────────────────────────────────────────
 
   context('Cadastro', () => {
     it('novo usuário com sucesso deve redirecionar para a página inicial', { tags: ['@smoke', '@cadastro'] }, () => {
@@ -67,6 +64,24 @@ describe('Gestão de Usuários — Frontend ServeRest', { tags: ['@e2e', '@usuar
       cy.getCadastroAlert('Nome é obrigatório').should('be.visible');
       cy.getCadastroAlert('Email é obrigatório').should('be.visible');
       cy.getCadastroAlert('Password é obrigatório').should('be.visible');
+    });
+  });
+
+  context('Logout', () => {
+    it('após login deve redirecionar para a página de login', { tags: ['@smoke', '@logout'] }, () => {
+      const usuario = new UsuarioBuilder().comoAdministrador().build();
+
+      UsuariosService.cadastrar(usuario).then((res) => {
+        expect(res.status).to.eq(201);
+      });
+
+      cy.visitLogin();
+      cy.loginViaUI(usuario.email, usuario.password);
+      cy.url({ timeout: 15000 }).should('include', '/home');
+
+      cy.getLogoutButton().click();
+      cy.url({ timeout: 10000 }).should('include', '/login');
+      cy.getLogoutButton().should('not.exist');
     });
   });
 });

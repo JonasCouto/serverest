@@ -46,3 +46,11 @@ Funcionalidade: Gerenciamento de Produtos — API ServeRest
     Quando cadastro o produto sem autenticação
     Então o status da resposta deve ser 401
     E o corpo deve conter a mensagem "Token de acesso ausente, inválido, expirado ou usuário do token não existe mais"
+
+  @smoke @exclusao
+  Cenário: Deletar produto cadastrado deve retornar sucesso e produto não deve mais existir
+    Dado que existe um produto cadastrado na API
+    Quando deleto o produto com autenticação
+    Então o status da resposta deve ser 200
+    E o corpo deve conter a mensagem "Registro excluído com sucesso"
+    E ao buscar o produto pelo ID o status deve ser 400

@@ -3,8 +3,6 @@ const { UsuariosService } = require('../../services/usuarios.service');
 const { ProdutoBuilder } = require('../../builders/produto.builder');
 const { UsuarioBuilder } = require('../../builders/usuario.builder');
 
-// ─── Helper ───────────────────────────────────────────────────────────────────
-
 function criarAdminEObterToken() {
   const admin = new UsuarioBuilder().comoAdministrador().build();
   return UsuariosService.cadastrar(admin).then(() =>
@@ -15,7 +13,6 @@ function criarAdminEObterToken() {
   );
 }
 
-// ─── Testes ───────────────────────────────────────────────────────────────────
 
 describe('Gerenciamento de Produtos — API ServeRest', { tags: ['@api', '@produtos'] }, () => {
   it('listar produtos cadastrados deve retornar status 200', { tags: ['@smoke', '@listagem'] }, () => {
@@ -102,6 +99,27 @@ describe('Gerenciamento de Produtos — API ServeRest', { tags: ['@api', '@produ
       expect(res.body.message).to.eq(
         'Token de acesso ausente, inválido, expirado ou usuário do token não existe mais'
       );
+    });
+  });
+
+  it('deletar produto cadastrado deve retornar sucesso e produto não deve mais existir', { tags: ['@smoke', '@exclusao'] }, () => {
+    criarAdminEObterToken().then((token) => {
+      const produto = new ProdutoBuilder().build();
+
+      ProdutosService.cadastrar(produto, token).then((resCadastro) => {
+        expect(resCadastro.status).to.eq(201);
+        const id = resCadastro.body._id;
+
+        ProdutosService.deletar(id, token).then((res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.message).to.eq('Registro excluído com sucesso');
+
+          ProdutosService.buscarPorId(id).then((resBusca) => {
+            expect(resBusca.status).to.eq(400);
+            expect(resBusca.body.message).to.eq('Produto não encontrado');
+          });
+        });
+      });
     });
   });
 });
